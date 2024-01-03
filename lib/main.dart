@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:health_app/src/screens/dashboard.dart';
+
+import 'src/screens/dashboard.dart';
 
 void main() {
   runApp(const MyApp());

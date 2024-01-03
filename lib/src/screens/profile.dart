@@ -1,7 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:health_app/src/screens/dashboard.dart';
 import 'package:iconsax/iconsax.dart';
+
+import '../widgets/increasing_text.dart';
 
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});

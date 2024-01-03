@@ -2,9 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:health_app/src/animations/fade_in.dart';
-import 'package:health_app/src/screens/profile.dart';
 import 'package:iconsax/iconsax.dart';
+
+import '../animations/fade_in.dart';
+import '../widgets/app_card.dart';
+import '../widgets/increasing_text.dart';
+import '../widgets/progress_with_text.dart';
+import 'profile.dart';
 
 class DashBoardScreen extends StatefulWidget {
   const DashBoardScreen({super.key});
@@ -342,190 +346,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class ProgressWithText extends StatefulWidget {
-  const ProgressWithText({
-    super.key,
-    required this.indicatorValue,
-    required this.title,
-    required this.value,
-  });
-
-  final double indicatorValue;
-  final String title;
-  final int value;
-
-  @override
-  State<ProgressWithText> createState() => _ProgressWithTextState();
-}
-
-class _ProgressWithTextState extends State<ProgressWithText>
-    with SingleTickerProviderStateMixin {
-  AnimationController? _controller;
-  Animation<double>? valueAnimation;
-  Animation<double>? indicatorAnimation;
-
-  @override
-  void initState() {
-    _controller = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1200),
-    );
-
-    valueAnimation =
-        Tween<double>(begin: 0, end: widget.value * 1).animate(_controller!)
-          ..addListener(() {
-            setState(() {});
-          });
-    indicatorAnimation = Tween<double>(begin: 0, end: widget.indicatorValue)
-        .animate(_controller!)
-      ..addListener(() {
-        setState(() {});
-      });
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(const Duration(milliseconds: 200)).then(
-        (value) => _controller!.forward(),
-      );
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    double w = (MediaQuery.sizeOf(context).width / 2) - 35;
-    return Stack(
-      children: [
-        Align(
-          alignment: Alignment.center,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "${valueAnimation?.value ?? 0}".split('.')[0],
-                style: const TextStyle(fontSize: 20),
-              ),
-              Text(
-                widget.title,
-                style: const TextStyle(
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: SizedBox.square(
-            dimension: w - 80,
-            child: RotatedBox(
-              quarterTurns: 3,
-              child: CircularProgressIndicator(
-                color: Colors.deepPurple.shade400,
-                strokeCap: StrokeCap.round,
-                strokeWidth: 10,
-                value: indicatorAnimation?.value ?? 0,
-                backgroundColor: Colors.deepPurple.withOpacity(.2),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class AppCard extends StatelessWidget {
-  const AppCard({
-    super.key,
-    required this.child,
-    required this.height,
-    this.color,
-  });
-
-  final Widget child;
-  final double height;
-  final MaterialColor? color;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      height: height,
-      decoration: BoxDecoration(
-        color: color != null ? null : Colors.white,
-        gradient: color == null
-            ? null
-            : LinearGradient(colors: [color!.shade300, color!.shade500]),
-        borderRadius: BorderRadius.circular(30),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(.3),
-            blurRadius: 60,
-          ),
-        ],
-      ),
-      child: child,
-    );
-  }
-}
-
-class IncreasingText extends StatefulWidget {
-  const IncreasingText(
-    this.value, {
-    super.key,
-    required this.isSingle,
-    required this.style,
-    this.suffix,
-  });
-
-  @override
-  State<IncreasingText> createState() => _IncreasingTextState();
-  final double value;
-  final bool isSingle;
-  final TextStyle style;
-  final String? suffix;
-}
-
-class _IncreasingTextState extends State<IncreasingText>
-    with SingleTickerProviderStateMixin {
-  AnimationController? _controller;
-  Animation<double>? animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1200));
-    animation = Tween<double>(begin: 0, end: widget.value).animate(_controller!)
-      ..addListener(() {
-        setState(() {});
-      });
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(const Duration(milliseconds: 200)).then(
-        (value) => _controller!.forward(),
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller!.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      animation == null
-          ? "0"
-          : animation!.value.toStringAsFixed(widget.isSingle ? 0 : 2) +
-              (widget.suffix ?? ""),
-      style: widget.style,
     );
   }
 }
